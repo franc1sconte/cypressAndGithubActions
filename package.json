@@ -1,0 +1,27 @@
+{
+  "name": "cypressandgithubactions",
+  "version": "1.0.0",
+  "description": "Cypress + GithubActions",
+  "main": "index.js",
+  "scripts": {
+    "clean:reports": "rimraf cypress/reports",
+    "test:clean:chrome": "npm run clean:reports && cypress run --browser chrome",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franc1sconte/cypressAndGithubActions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/franc1sconte/cypressAndGithubActions/issues"
+  },
+  "homepage": "https://github.com/franc1sconte/cypressAndGithubActions#readme",
+  "devDependencies": {
+    "cypress": "^15.3.0",
+    "cypress-mochawesome-reporter": "^4.0.2",
+    "rimraf": "^6.0.1"
+  }
+}
