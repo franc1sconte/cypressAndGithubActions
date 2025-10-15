@@ -29,7 +29,8 @@ jobs:
         run: npm ci
 
       - name: Corre Cypress en Chrome
-        run: npm run test:clean:chrome
+        run: echo "Ejecutando en ambiente: ${{ github.event.inputs.environment }}"
+          ENVIRONMENT=${{ github.event.inputs.environment }} npm run test:clean:chrome
 
       - name: Subir reporte de pruebas
         if: always()
