@@ -1,10 +1,16 @@
 name: Run Cypress Tests
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Selecciona el ambiente donde correr los tests"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - produccion
 
 jobs:
   cypress-run:
