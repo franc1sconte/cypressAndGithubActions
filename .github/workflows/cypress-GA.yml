@@ -7,10 +7,8 @@ on:
         description: "Selecciona el ambiente donde correr los tests"
         required: true
         default: "staging"
-        type: choice
-        options:
-          - staging
-          - produccion
+        # NOTE: GitHub Actions inputs don't enforce a choice list in the UI reliably across versions.
+        # We'll validate and map the value in a step below (accepts 'staging', 'production' or 'produccion').
 
 jobs:
   cypress-run:
@@ -28,10 +26,29 @@ jobs:
       - name: Instala dependencias
         run: npm ci
 
-      - name: Corre Cypress en Chrome
+      - name: Validate and map environment input
+        id: validate
+        run: |
+          echo "Input environment: '${{ github.event.inputs.environment }}'"
+          # normalize to lowercase
+          ENV_LOWER=$(echo "${{ github.event.inputs.environment }}" | tr '[:upper:]' '[:lower:]')
+          case "$ENV_LOWER" in
+            staging)
+              ENV_NAME=staging
+              ;;
+            produccion|produccion)
+              ENV_NAME=produccion
+              ;;
+            *)
+              echo "Invalid environment: $ENV_LOWER. Allowed: staging, produccion"
+              exit 1
+              ;;
+          esac
+          echo "env=$ENV_NAME" >> $GITHUB_OUTPUT
+
+      - name: Corre Cypress en Chrome (usar CYPRESS_ENV)
         env:
-          # Tomamos el valor validado y lo exponemos como CYPRESS_ENV
-          CYPRESS_ENV: ${{ steps.validate.outputs.env_lower }}
+          CYPRESS_ENV: ${{ steps.validate.outputs.env }}
         run: |
           echo "Running Cypress in environment: $CYPRESS_ENV"
           npm run test:clean:chrome
