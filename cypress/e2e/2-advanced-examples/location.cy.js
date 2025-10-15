@@ -2,7 +2,7 @@
 
 context('Location', () => {
   beforeEach(() => {
-    cy.visit('https://example.cypress.io/commands/location')
+    cy.visit('/')
   })
 
   it('cy.hash() - get the current URL hash', () => {
