@@ -24,14 +24,30 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      
+      - name: Validate opcion
+        id: validate
+        run: |
+          echo "Input environment: ${{ github.event.inputs.environment }}"
+          # Normaliza a minúsculas
+          ENV_LOWER=$(echo "${{ github.event.inputs.environment }}" | tr '[:upper:]' '[:lower:]')
+          # Validar valores permitidos
+          if [ "$ENV_LOWER" != "staging" ] && [ "$ENV_LOWER" != "production" ]; then
+            echo "Invalid environment: $ENV_LOWER"
+            exit 1
+          fi
+          echo "env_lower=$ENV_LOWER" >> $GITHUB_OUTPUT
 
       - name: Instala dependencias
         run: npm ci
 
       - name: Corre Cypress en Chrome
+        env:
+          # Tomamos el valor validado y lo exponemos como CYPRESS_ENV
+          CYPRESS_ENV: ${{ steps.validate.outputs.env_lower }}
         run: |
-          echo "Ejecutando en ambiente: ${{ github.event.inputs.environment }}"
-          ENVIRONMENT=${{ github.event.inputs.environment }} npm run test:clean:chrome
+          echo "Running Cypress in environment: $CYPRESS_ENV"
+          npm run test:clean:chrome
 
       - name: Subir reporte de pruebas
         if: always()

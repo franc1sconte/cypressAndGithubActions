@@ -1,0 +1,4 @@
+{
+  "baseUrl": "https://app.staging.tichacademy.com/",
+  "environment": "staging"
+}
