@@ -9,12 +9,13 @@ on:
         default: "Produ"
         type: choice
         options:
-          - staging
+          - Staging
           - Produ
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
       - name: Checkout code
@@ -29,7 +30,7 @@ jobs:
         id: set-env
         run: |
           echo "Entorno seleccionado: ${{ github.event.inputs.environment }}"
-          if [ "${{ github.event.inputs.environment }}" == "staging" ]; then
+          if [ "${{ github.event.inputs.environment }}" == "Staging" ]; then
             echo "BASE_URL=${{ secrets.BASE_URL_STAGING }}" >> $GITHUB_ENV
           else
             echo "BASE_URL=${{ secrets.BASE_URL_PRODU }}" >> $GITHUB_ENV
