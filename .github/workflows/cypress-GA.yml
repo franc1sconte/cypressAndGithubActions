@@ -4,18 +4,31 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: "Selecciona el ambiente donde correr los tests"
+        description: "Seleccionar entorno"
         required: true
-        default: "staging"
-        # NOTE: GitHub Actions inputs don't enforce a choice list in the UI reliably across versions.
-        # We'll validate and map the value in a step below (accepts 'staging', 'production' or 'produccion').
+        default: "produ"
+        type: choice
+        options:
+          - staging
+          - produ
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
+    env:
+      # 🔹 Variables del entorno elegidas por el usuario
+      USER_ID_1: ${{ secrets.USER_ID_1 }}
+      USER_NAME_1: ${{ secrets.USER_NAME_1 }}
+      USER_EMAIL_1: ${{ secrets.USER_EMAIL_1 }}
+      USER_AVATAR_1: ${{ secrets.USER_AVATAR_1 }}
+      USER_TOKEN_1: ${{ secrets.USER_TOKEN_1 }}
+      IS_AUTHENTICATED: ${{ secrets.IS_AUTHENTICATED }}
+      WAS_ON_BOARDED: ${{ secrets.WAS_ON_BOARDED }}
+      BASE_URL: ${{ secrets.BASE_URL_PRODU }}
+
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -23,39 +36,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Instala dependencias
+      - name: Install dependencies
         run: npm ci
 
-      - name: Validate and map environment input
-        id: validate
-        run: |
-          echo "Input environment: '${{ github.event.inputs.environment }}'"
-          # normalize to lowercase
-          ENV_LOWER=$(echo "${{ github.event.inputs.environment }}" | tr '[:upper:]' '[:lower:]')
-          case "$ENV_LOWER" in
-            staging)
-              ENV_NAME=staging
-              ;;
-            produccion|produccion)
-              ENV_NAME=produccion
-              ;;
-            *)
-              echo "Invalid environment: $ENV_LOWER. Allowed: staging, produccion"
-              exit 1
-              ;;
-          esac
-          echo "env=$ENV_NAME" >> $GITHUB_OUTPUT
-
-      - name: Corre Cypress en Chrome (usar CYPRESS_ENV)
-        env:
-          CYPRESS_ENV: ${{ steps.validate.outputs.env }}
-        run: |
-          echo "Running Cypress in environment: $CYPRESS_ENV"
-          npm run test:clean:chrome
-
-      - name: Subir reporte de pruebas
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-mochawesome-report
-          path: cypress/reports/
+      - name: Run Cypress tests
+        run: npx cypress run --browser chrome
