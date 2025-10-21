@@ -6,26 +6,15 @@ on:
       environment:
         description: "Seleccionar entorno"
         required: true
-        default: "produ"
+        default: "Produ"
         type: choice
         options:
           - staging
-          - produ
+          - Produ
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
-
-    env:
-      # 🔹 Variables del entorno elegidas por el usuario
-      USER_ID_1: ${{ secrets.USER_ID_1 }}
-      USER_NAME_1: ${{ secrets.USER_NAME_1 }}
-      USER_EMAIL_1: ${{ secrets.USER_EMAIL_1 }}
-      USER_AVATAR_1: ${{ secrets.USER_AVATAR_1 }}
-      USER_TOKEN_1: ${{ secrets.USER_TOKEN_1 }}
-      IS_AUTHENTICATED: ${{ secrets.IS_AUTHENTICATED }}
-      WAS_ON_BOARDED: ${{ secrets.WAS_ON_BOARDED }}
-      BASE_URL: ${{ secrets.BASE_URL_PRODU }}
 
     steps:
       - name: Checkout code
@@ -36,8 +25,33 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Configurar variables según entorno
+        id: set-env
+        run: |
+          echo "Entorno seleccionado: ${{ github.event.inputs.environment }}"
+          if [ "${{ github.event.inputs.environment }}" == "staging" ]; then
+            echo "BASE_URL=${{ secrets.BASE_URL_STAGING }}" >> $GITHUB_ENV
+          else
+            echo "BASE_URL=${{ secrets.BASE_URL_PRODU }}" >> $GITHUB_ENV
+          fi
 
-      - name: Run Cypress tests
-        run: npx cypress run --browser chrome
+      - name: Ejecutar Cypress
+        env:
+          USER_ID_1: ${{ secrets.USER_ID_1 }}
+          USER_NAME_1: ${{ secrets.USER_NAME_1 }}
+          USER_EMAIL_1: ${{ secrets.USER_EMAIL_1 }}
+          USER_AVATAR_1: ${{ secrets.USER_AVATAR_1 }}
+          USER_TOKEN_1: ${{ secrets.USER_TOKEN_1 }}
+          IS_AUTHENTICATED: ${{ secrets.IS_AUTHENTICATED }}
+          WAS_ON_BOARDED: ${{ secrets.WAS_ON_BOARDED }}
+          BASE_URL: ${{ env.BASE_URL }}
+        run: |
+          npm ci
+          npx cypress run --browser chrome
+
+      - name: Upload Cypress report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-report
+          path: cypress/reports
