@@ -38,6 +38,11 @@ jobs:
 
       - name: Ejecutar Cypress
         env:
+          USER_ID_2: ${{ secrets.USER_ID_2 }}
+          USER_NAME_2: ${{ secrets.USER_NAME_2 }}
+          USER_EMAIL_2: ${{ secrets.USER_EMAIL_2 }}
+          USER_AVATAR_2: ${{ secrets.USER_AVATAR_2 }}
+          USER_TOKEN_2: ${{ secrets.USER_TOKEN_2 }}
           USER_ID_1: ${{ secrets.USER_ID_1 }}
           USER_NAME_1: ${{ secrets.USER_NAME_1 }}
           USER_EMAIL_1: ${{ secrets.USER_EMAIL_1 }}
