@@ -5,18 +5,19 @@ describe('example', () => {
     cy.clearLocalStorage()
   })
 
-  it('prueba login 1', () => {
+
+  it('prueba login 2', () => {
 
     const authState = {
       state: {
         user: {
-          id: Cypress.env('USER_ID_1'),
-          name: Cypress.env('USER_NAME_1'),
-          email: Cypress.env('USER_EMAIL_1'),
-          avatar: Cypress.env('USER_AVATAR_1'),
+          id: Cypress.env('USER_ID_2'),
+          name: Cypress.env('USER_NAME_2'),
+          email: Cypress.env('USER_EMAIL_2'),
+          avatar: Cypress.env('USER_AVATAR_2'),
           wasOnboarded: Cypress.env('WAS_ON_BOARDED')
         },
-        token: Cypress.env('USER_TOKEN_1'),
+        token: Cypress.env('USER_TOKEN_2'),
         isAuthenticated: Cypress.env('IS_AUTHENTICATED')
       },
       version: 0
@@ -35,18 +36,18 @@ describe('example', () => {
 
   })
 
-  it('prueba login 2', () => {
+  it('prueba login 1', () => {
 
     const authState = {
       state: {
         user: {
-          id: Cypress.env('USER_ID_2'),
-          name: Cypress.env('USER_NAME_2'),
-          email: Cypress.env('USER_EMAIL_2'),
-          avatar: Cypress.env('USER_AVATAR_2'),
+          id: Cypress.env('USER_ID_1'),
+          name: Cypress.env('USER_NAME_1'),
+          email: Cypress.env('USER_EMAIL_1'),
+          avatar: Cypress.env('USER_AVATAR_1'),
           wasOnboarded: Cypress.env('WAS_ON_BOARDED')
         },
-        token: Cypress.env('USER_TOKEN_2'),
+        token: Cypress.env('USER_TOKEN_1'),
         isAuthenticated: Cypress.env('IS_AUTHENTICATED')
       },
       version: 0
