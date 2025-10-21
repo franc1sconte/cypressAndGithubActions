@@ -2,7 +2,7 @@
 
 describe('example', () => {
   beforeEach(() => {
-
+    cy.clearLocalStorage()
   })
 
   it('prueba login 1', () => {
