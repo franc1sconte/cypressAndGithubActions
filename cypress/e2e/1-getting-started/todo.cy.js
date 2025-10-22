@@ -32,7 +32,7 @@ describe('example', () => {
 
     cy.log('Auth hardcodeado inyectado:', authState);
     cy.url().should('include', '/dashboard')
-    // cy.screenshot('dashboard-authenticated')
+    cy.screenshot('dashboard-authenticated-2')
 
   })
 
@@ -62,7 +62,7 @@ describe('example', () => {
 
     cy.log('Auth hardcodeado inyectado:', authState);
     cy.url().should('include', '/dashboard')
-    // cy.screenshot('dashboard-authenticated')
+    cy.screenshot('dashboard-authenticated-1')
 
   })
 
