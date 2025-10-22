@@ -6,7 +6,7 @@ describe('example', () => {
   })
 
 
-  it('prueba login 2', () => {
+  it('prueba login cuenta numero 2', () => {
 
     const authState = {
       state: {
@@ -36,7 +36,7 @@ describe('example', () => {
 
   })
 
-  it('prueba login 1', () => {
+  it('prueba login cuenta numero 1', () => {
 
     const authState = {
       state: {
